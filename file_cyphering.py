@@ -27,7 +27,7 @@ def store_token(name: str, date: str, key: str):
     
     data_to_store = {"Item name":name, "Date of encoding":date, "Encoding key":key }
 
-    with open('logs.json', 'w') as file:
+    with open('logs.json', 'a') as file:
         json.dump(data_to_store, file)
 
     return True
@@ -57,6 +57,13 @@ def encrypt_file(key, filename):
             elif len(chunk) % 16 != 0:
                 chunk += b' ' * (16 - len(chunk) % 16)
             outfile.write(encryptor.encrypt(chunk))
+
+
+def decryption_selected():
+    print("provide encryption key: ")
+    key = input()
+
+    decrypt_file(key=key, filename=folder_path)
 
 def decrypt_file(key, filename):
     chunk_size = 64*1024
