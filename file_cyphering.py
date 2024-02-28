@@ -74,7 +74,7 @@ def decryption_selected():
     print("provide encryption key: ")
     key = input()
     
-    key = key.encode('utf-8')
+    key = base64.b64decode(key.encode('utf-8'))
     print(key)
     
     
