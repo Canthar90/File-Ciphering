@@ -4,6 +4,8 @@ import os
 import secrets
 from datetime import datetime
 import json
+import base64
+import hashlib
 
 
 
@@ -24,11 +26,20 @@ def get_current_date():
     return data_time_formated_timestamp
 
 def store_token(name: str, date: str, key: str):
+    key_str = base64.b64encode(key).decode('utf-8')
     
-    data_to_store = {"Item name":name, "Date of encoding":date, "Encoding key":key }
+    data_to_store = {"Item name":name, "Date of encoding":date, "Encoding key":key_str },
 
-    with open('logs.json', 'a') as file:
-        json.dump(data_to_store, file)
+    with open('logs.json', 'r') as file:
+        archied_data = json.load(file)
+
+    if type(archied_data) != list :
+        archied_data = [archied_data]
+
+    archied_data.append(data_to_store)
+
+    with open('logs.json', 'w') as file:
+        json.dump(archied_data, file)
 
     return True
     
@@ -37,7 +48,7 @@ def generate_key(name: str):
     key = generate_token()
     date = get_current_date()
     
-    if store_token(name=name, date=date, key=str(key)):
+    if store_token(name=name, date=date, key=key):
         return key
 
 
@@ -62,8 +73,20 @@ def encrypt_file(key, filename):
 def decryption_selected():
     print("provide encryption key: ")
     key = input()
+    
+    key = key.encode('utf-8')
+    print(key)
+    
+    
+    
+    
+    for root, dirs, files in os.walk(folder_path):
+        for file in files:
+            file_path = os.path.join(root, file)
+            decrypt_file(key=key, filename=file_path)
+            os.remove(file_path)
 
-    decrypt_file(key=key, filename=folder_path)
+    
 
 def decrypt_file(key, filename):
     chunk_size = 64*1024
@@ -79,15 +102,18 @@ def decrypt_file(key, filename):
             outfile.write(decryptor.decrypt(chunk))
 
 # Example usage
-key = generate_key(name='test')
+
 folder_path = 'E:/projects/File-Ciphering/test-folder'
 
 print("Please choose action type you like to perform")
 
-action = input("If you wana to encrypt data type 'e' otherwise type 'd'")
+action = input("If you wana to encrypt data type 'e' otherwise type 'd': ")
 if action == 'e':
+    print("encrypt")
+    key = generate_key(name='test')
     encrypt_data_selected()
 elif action == 'd':
+    print("decrypt")
     decryption_selected()
 
 
