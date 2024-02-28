@@ -10,7 +10,7 @@ import base64
 
 class EncryptFiles():
 
-    def encrypt_data_selected(self):
+    def encrypt_data_selected(self, folder_path: str):
         for root, dirs, files in os.walk(folder_path):
             for file in files:
                 file_path = os.path.join(root, file)
@@ -71,7 +71,7 @@ class EncryptFiles():
                 outfile.write(encryptor.encrypt(chunk))
 
 
-    def decryption_selected(self):
+    def decryption_selected(self, folder_path: str):
         print("provide encryption key: ")
         key = input()
         
@@ -100,23 +100,21 @@ class EncryptFiles():
                     break
                 outfile.write(decryptor.decrypt(chunk))
 
-# Example usage
-
-folder_path = 'E:/projects/File-Ciphering/test-folder'
-encryption = EncryptFiles()
-
-print("Please choose action type you like to perform")
-
-action = input("If you wana to encrypt data type 'e' otherwise type 'd': ")
-if action == 'e':
-    print("encrypt")
-    key = encryption.generate_key(name='test')
-    encryption.encrypt_data_selected()
-elif action == 'd':
-    print("decrypt")
-    encryption.decryption_selected()
 
 
+if __name__ == '__main__':
 
+    folder_path = 'E:/projects/File-Ciphering/test-folder'
+    encryption = EncryptFiles()
 
-# To decrypt the files, use the decrypt_file function
+    print("Please choose action type you like to perform")
+
+    action = input("If you wana to encrypt data type 'e' otherwise type 'd': ")
+    if action == 'e':
+        print("encrypt")
+        key = encryption.generate_key(name='test')
+        encryption.encrypt_data_selected(folder_path)
+    elif action == 'd':
+        print("decrypt")
+        encryption.decryption_selected(folder_path)
+
