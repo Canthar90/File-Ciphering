@@ -19,21 +19,31 @@ class MyWindow(QMainWindow):
         self.input_field = QLineEdit()
         self.input_field.setPlaceholderText("Drag and drop folder or file here")
         self.input_field.setAcceptDrops(True)
+        self.input_field.setStyleSheet("margin: 20px")
 
         button_layout = QHBoxLayout()  # Create a QHBoxLayout for the buttons
 
         self.green_button = QPushButton("Green Button")
-        self.green_button.setStyleSheet("background-color: #4CAF50; color: white; border-radius: 10px; padding: 10px")
+        self.green_button.setStyleSheet("background-color: #4CAF50; color: white; border-radius: 10px; padding: 10px; margin-left: 20px")
 
         self.purple_button = QPushButton("Purple Button")
-        self.purple_button.setStyleSheet("background-color: #673AB7; color: white; border-radius: 10px; padding: 10px")
+        self.purple_button.setStyleSheet("background-color: #673AB7; color: white; border-radius: 10px; padding: 10px; margin-right: 20px")
+
+        self.blue_button = QPushButton("View logs")
+        self.blue_button.setStyleSheet("background-color: #51829B; color: white; border-radius: 10px; padding: 15px")
+
+        # 9BB0C1
 
         button_layout.addWidget(self.green_button)  # Add the green button to the button layout
         button_layout.addItem(QSpacerItem(20, 10, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum))  # Add a spacer item to push the buttons to the sides
         button_layout.addWidget(self.purple_button)  # Add the purple button to the button layout
 
+        
+
         layout.addWidget(self.input_field)
         layout.addLayout(button_layout)  # Add the button layout to the main layout
+
+        layout.addWidget(self.blue_button, alignment=Qt.AlignmentFlag.AlignCenter)
 
         central_widget.setLayout(layout)
 
@@ -60,19 +70,19 @@ class MyWindow(QMainWindow):
 
     def on_green_button_clicked(self):
         # Simple animation
-        self.green_button.setStyleSheet("background-color: #8BC34A; color: white; border-radius: 10px; padding: 10px")
+        self.green_button.setStyleSheet("background-color: #8BC34A; color: white; border-radius: 10px; padding: 10px; margin-left: 20px")
         QTimer.singleShot(200, self.restore_green_button_style)  
 
         print("Green button clicked!")
 
     def restore_green_button_style(self):
         # Restore orginal state
-        self.green_button.setStyleSheet("background-color: #4CAF50; color: white; border-radius: 10px; padding: 10px")
+        self.green_button.setStyleSheet("background-color: #4CAF50; color: white; border-radius: 10px; padding: 10px; margin-left: 20px")
 
 
     def on_purple_button_clicked(self):
         # Simple animation
-        self.purple_button.setStyleSheet("background-color: #9575CD; color: white; border-radius: 10px; padding: 10px")
+        self.purple_button.setStyleSheet("background-color: #9575CD; color: white; border-radius: 10px; padding: 10px; margin-right: 20px")
         QTimer.singleShot(200, self.restore_purple_button_style)
 
         print("Purple button clicked!")
@@ -80,7 +90,7 @@ class MyWindow(QMainWindow):
 
     def restore_purple_button_style(self):
         # Restore orginal state
-        self.purple_button.setStyleSheet("background-color: #673AB7; color: white; border-radius: 10px; padding: 10px")
+        self.purple_button.setStyleSheet("background-color: #673AB7; color: white; border-radius: 10px; padding: 10px; margin-right: 20px")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
