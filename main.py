@@ -3,12 +3,14 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QLineEdit, Q
 from PyQt6.QtCore import Qt, QMimeData, QTimer
 from pathlib import Path
 
+from stored_data_windo import StoredDataWindow
+
 
 class MyWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("Simple GUI Template")
+        self.setWindowTitle("DirCypher")
         self.setGeometry(100, 100, 400, 200)
 
         central_widget = QWidget()
@@ -78,6 +80,8 @@ class MyWindow(QMainWindow):
         QTimer.singleShot(200, self.restore_green_button_style)  
 
         print("Green button clicked!")
+        print(self.input_field.text())
+
 
     def restore_green_button_style(self):
         # Restore orginal state
@@ -101,6 +105,11 @@ class MyWindow(QMainWindow):
         #simple Animation
         self.blue_button.setStyleSheet("background-color: #9BB0C1; color: white; border-radius: 10px; padding: 13px; border: 2px solid black")
         QTimer.singleShot(200, self.restore_blue_button_style)
+
+        secondary_data_window = StoredDataWindow()
+        secondary_data_window.show()
+        self.secondary_data_window = secondary_data_window
+        
 
         print("Blue button clicked")
 
