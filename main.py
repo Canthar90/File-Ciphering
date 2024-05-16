@@ -1,7 +1,9 @@
 import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QLineEdit, QPushButton, QWidget, QHBoxLayout, QSpacerItem, QSizePolicy, QLabel
-from PyQt6.QtCore import Qt, QMimeData, QTimer
+from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QLineEdit, QPushButton, QWidget, QHBoxLayout, QSpacerItem, QSizePolicy, QLabel, QMessageBox, QTextBrowser, QTextEdit, QTableWidget, QTableWidgetItem
+from PyQt6.QtCore import Qt, QMimeData, QTimer, QVariant, QJsonDocument
 from pathlib import Path
+
+import json
 
 from stored_data_windo import StoredDataWindow
 
@@ -106,10 +108,29 @@ class MyWindow(QMainWindow):
         self.blue_button.setStyleSheet("background-color: #9BB0C1; color: white; border-radius: 10px; padding: 13px; border: 2px solid black")
         QTimer.singleShot(200, self.restore_blue_button_style)
 
-        secondary_data_window = StoredDataWindow()
-        secondary_data_window.show()
-        self.secondary_data_window = secondary_data_window
+        with open('logs.json', 'r') as f:
+            data = json.load(f)
         
+        # text_browser = QTextEdit()
+        # text_browser.setText(data)
+        text_browser = QTableWidget()
+        text_browser.setColumnCount(len(data[0][0]))
+        text_browser.setRowCount(len(data))
+        text_browser.setMinimumWidth(300)
+        for i, row in enumerate(data):
+            for x, row_2 in enumerate(row):
+                for j, (key, val)in enumerate(row_2.items()):
+                    item = QTableWidgetItem(str(val))
+                    text_browser.setItem(i, j, item)
+            
+
+        msg = QMessageBox()
+        msg.layout().addWidget(text_browser)
+        msg.setText("Click Show Details to see your logs")
+        # msg.setWindowTitle("Json Logs")
+        # msg.QTextEdit(data)
+        # msg.setDetailedText(json.dumps(data))
+        msg.exec()
 
         print("Blue button clicked")
 
@@ -123,3 +144,57 @@ if __name__ == "__main__":
     window = MyWindow()
     window.show()
     sys.exit(app.exec())
+
+
+
+
+
+
+
+
+
+# class CustomMessageBox(QMessageBox):
+#     def __init__(self, json_data):
+#         super().__init__()
+
+#         self.json_data = json_data
+
+#         self.setWindowTitle("JSON Data")
+#         self.setIcon(QMessageBox.Icon.Information)
+#         self.setStandardButtons(QMessageBox.StandardButton.Ok)
+
+#         # Create a layout for the widget
+#         layout = QGridLayout()
+
+#         # Create a label to display the JSON data
+#         self.label = QLabel(self)
+#         self.label.setText(json.dumps(self.json_data))
+
+#         # Create a button to copy the JSON data to the clipboard
+#         self.copy_button = QPushButton(self)
+#         self.copy_button.setText("Copy")
+#         self.copy_button.clicked.connect(self.copy_data)
+
+#         # Add the label and button to the layout
+#         layout.addWidget(self.label, 0, 0)
+#         layout.addWidget(self.copy_button, 1, 0)
+
+#         # Set the layout for the widget
+#         self.setLayout(layout)
+
+#     def copy_data(self):
+#         # Get the text from the label
+#         text = self.label.text()
+
+#         # Copy the text to the clipboard
+#         clipboard = QClipboard()
+#         clipboard.setText(text)
+
+# # Create an instance of the custom widget
+# with open("logs.json", 'r') as f:
+#     json_data = json.load(f)
+# msg_box = CustomMessageBox(json_data)
+
+# # Show the message box
+# msg_box.show()
+# msg_box.exec()

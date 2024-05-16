@@ -1,23 +1,50 @@
-from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QWidget
-from PyQt6.QtCore import Qt
+import json
+
+from PyQt6.QtCore import Qt, QAbstractTableModel,  QVariant
+from PyQt6.QtWidgets import QMainWindow, QTableView
+
+class MyTableModel(QAbstractTableModel):
+    def __init__(self, data):
+        super().__init__()
+        self._data = data
+
+    def rowCount(self, parent):
+        return len(self._data)
+
+    def columnCount(self, parent):
+        return len(self._data[0])
+
+    def data(self, index, role):
+        if role == Qt.ItemDataRole.DisplayRole:
+            return self._data[index.row()][index.column()]
+
+    def headerData(self, section, orientation, role):
+        if role == Qt.ItemDataRole.DisplayRole:
+            if orientation == Qt.Orientation.Horizontal:
+                return f"Column {section}"
+            else:
+                return f"Row {section}"
+
 
 
 class StoredDataWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("Stored Clues")
-        self.setGeometry(100, 100, 600, 200)
+        self.setWindowTitle("My Pop-Up Window")
 
-        centarl_widget = QWidget()
-        self.setCentralWidget(centarl_widget)
+        self.table_view = QTableView()
+        self.setCentralWidget(self.table_view)
 
-        layout = QVBoxLayout()
-        
-        text = QLabel("This second window will contain clues saved in logs.json")
+        with open("logs.json", "r") as f:
+            self.data = json.load(f)
 
-        layout.addWidget(text)
+        for row in self.data:
+            for item in row:
+                item = [item]
 
-        centarl_widget.setLayout(layout)
+        model = MyTableModel(self.data)
+        self.table_view.setModel(model)
 
-        
+        self.show()
+
