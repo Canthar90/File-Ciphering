@@ -5,7 +5,7 @@ from pathlib import Path
 
 import json
 
-from stored_data_windo import StoredDataWindow
+from file_cyphering import EncryptFiles
 
 
 class MyWindow(QMainWindow):
@@ -30,7 +30,7 @@ class MyWindow(QMainWindow):
 
         button_layout = QHBoxLayout()  # Create a QHBoxLayout for the buttons
 
-        self.green_button = QPushButton("Green Button")
+        self.green_button = QPushButton("Cipher file")
         self.green_button.setStyleSheet("background-color: #4CAF50; color: white; border-radius: 10px; padding: 10px; margin-left: 20px")
 
         self.purple_button = QPushButton("Purple Button")
@@ -79,10 +79,14 @@ class MyWindow(QMainWindow):
     def on_green_button_clicked(self):
         # Simple animation
         self.green_button.setStyleSheet("background-color: #8BC34A; color: white; border-radius: 10px; padding: 8px; margin-left: 20px; border: 2px solid black")
+        if self.input_field.text() != '':
+            
+            enctyptor = EncryptFiles()
+            enctyptor.encrypt_data_selected(self.input_field.text())
+            self.json_data_popup()
+        
         QTimer.singleShot(200, self.restore_green_button_style)  
 
-        print("Green button clicked!")
-        print(self.input_field.text())
 
 
     def restore_green_button_style(self):
@@ -108,11 +112,13 @@ class MyWindow(QMainWindow):
         self.blue_button.setStyleSheet("background-color: #9BB0C1; color: white; border-radius: 10px; padding: 13px; border: 2px solid black")
         QTimer.singleShot(200, self.restore_blue_button_style)
 
+        self.json_data_popup()
+
+    def json_data_popup(self):
         with open('logs.json', 'r') as f:
             data = json.load(f)
         
-        # text_browser = QTextEdit()
-        # text_browser.setText(data)
+
         text_browser = QTableWidget()
         text_browser.setColumnCount(len(data[0][0]))
         text_browser.setRowCount(len(data))
@@ -127,12 +133,9 @@ class MyWindow(QMainWindow):
         msg = QMessageBox()
         msg.layout().addWidget(text_browser)
         msg.setText("Click Show Details to see your logs")
-        # msg.setWindowTitle("Json Logs")
-        # msg.QTextEdit(data)
-        # msg.setDetailedText(json.dumps(data))
+        
         msg.exec()
 
-        print("Blue button clicked")
 
 
     def restore_blue_button_style(self):

@@ -11,6 +11,7 @@ import base64
 class EncryptFiles():
 
     def encrypt_data_selected(self, folder_path: str):
+        key = self.generate_key(name='test')
         for root, dirs, files in os.walk(folder_path):
             for file in files:
                 file_path = os.path.join(root, file)
@@ -71,9 +72,7 @@ class EncryptFiles():
                 outfile.write(encryptor.encrypt(chunk))
 
 
-    def decryption_selected(self, folder_path: str):
-        print("provide encryption key: ")
-        key = input()
+    def decryption_selected(self, folder_path: str, key: str):
         
         key = base64.b64decode(key.encode('utf-8'))
         print(key)
@@ -115,6 +114,7 @@ if __name__ == '__main__':
         key = encryption.generate_key(name='test')
         encryption.encrypt_data_selected(folder_path)
     elif action == 'd':
+        decryption_key = input('Please input decryption key: ')
         print("decrypt")
-        encryption.decryption_selected(folder_path)
+        encryption.decryption_selected(folder_path, decryption_key)
 
